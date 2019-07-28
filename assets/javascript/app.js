@@ -1,25 +1,36 @@
 $( document ).ready(function() {
    
-    var config = {
-      apiKey: "AIzaSyD-twK5xLb6HN1arR3b9zrsJJeDmFIq80o",
-      authDomain: "myfirstproject-f81f4.firebaseapp.com",
-      databaseURL: "https://myfirstproject-f81f4.firebaseio.com",
-      projectId: "myfirstproject-f81f4",
-      storageBucket:  "fir-click-counter-7cdb9.appspot.com",
-      messagingSenderId: "674705617727",
-      appId: "1:674705617727:web:97659f086d8e1730"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(config);
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyAurkYKmD_MRe6m2ckcJJa4yFXL0Uqn8sw",
+    authDomain: "trainactivity-eb718.firebaseapp.com",
+    databaseURL: "https://trainactivity-eb718.firebaseio.com",
+    projectId: "trainactivity-eb718",
+    storageBucket: "",
+    messagingSenderId: "883419995244",
+    appId: "1:883419995244:web:7a4680e57d8fc727"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
     //     // VARIABLES
     // --------------------------------------------------------------------------------
     var database = firebase.database();
 
     // Initial Variables (SET the first set IN FIREBASE FIRST)
-    var Emname;
-    var Role;
-    var StartDate;
-    var MonthlyRate;
+    var TrainName;
+    var Destination;
+    var Frequency;
+
+    var TrainTime = [];
+    var counter;
+    var HH; 
+    var MM;
+    var now = new Date();
+    var mins = now.getMinutes();
+    var secs = now.getSeconds();
+    var hours = now.getHours();
+    var timenowmin = Number(hours)*60+Number(mins);
+    
 
     // Click Button changes what is stored in firebase
     $("#click-button").on("click", function(event) {
@@ -27,18 +38,19 @@ $( document ).ready(function() {
       event.preventDefault();
 
       // Get inputs
-      Emname = $("#employeeNameInput").val().trim();
-      Role = $("#Roleinput").val().trim();
-      StartDate = $("#startDateInput").val().trim();
-      MonthlyRate =$("#monthlyRateInput").val().trim();
+      TrainName = $("#TrainNameInput").val().trim();
+      Destination = $("#Destinationinput").val().trim();
+      Frequency = $("#FrequencyInput").val().trim();
+      TrainTime = $("#TrainTime").val().toLowerCase().trim();
 
       // Change what is saved in firebase
       database.ref().push({
-        Emname: Emname,
-        Role: Role,
-        StartDate: StartDate,
-        MonthlyRate: MonthlyRate
+        TrainName: TrainName,
+        Destination: Destination,
+        Frequency: Frequency,
+        TrainTime: TrainTime,
       });
+      
     });
 
     // Firebase is always watching for changes to the data.
@@ -50,31 +62,100 @@ $( document ).ready(function() {
       console.log(snapshot.val());
 
       // Log the value of the various properties
-      console.log(snapshot.val(). Emname);
-      console.log(snapshot.val().Role);
-      console.log(snapshot.val().StartDate);
-      console.log(snapshot.val().MonthlyRate);
+      console.log(snapshot.val(). TrainName);
+      console.log(snapshot.val().Destination);
+      console.log(snapshot.val().Frequency);
+      console.log(hours+ ":" + mins+":"+ secs);
+     var uno = Number(snapshot.val().Frequency); 
+      
+
+
+    //  lines 74-138 just to find out next arriving time of the train
+      setupinterval ();
+      
+      function setupinterval (){
+        counter = Number(snapshot.val().TrainTime.split(":")[0])*60+Number(snapshot.val().TrainTime.split(":")[1]);
+        setfirstinterval ();
+      }
+      function setfirstinterval (){
+        
+        if (counter>1440){
+          counter=counter-1440;
+          arrivalnext();
+       
+        }
+        else {
+          counter = counter+Number(snapshot.val().Frequency);
+          setfirstinterval ();
+        }
+      }
+
+      function arrivalnext(){
+        if (Number(counter)>=Number(timenowmin)){
+          counter=Number(counter)-Number(timenowmin);
+         
+        }
+        else {
+          counter=Number(counter)+Number(snapshot.val().Frequency);
+          arrivalnext();
+        }
+      }
+      
+      timeconverter();
+
+      function timeconverter(){
+        if (Number(hours) >12){
+          HH=Number(hours)-12;
+          MM = Number(mins);
+        }
+        else {
+          HH = Number(hours)
+          MM = Number(mins);
+        }
+      }
+
+      nexttrainarrives(); 
+
+      function nexttrainarrives(){
+        if (MM+counter>=60){
+          HH=HH+1;
+          MM=MM+Number(counter)-60;
+        }
+        else {
+        MM = MM+Number(counter);
+        }
+      }
+
+      militaryconverter();
+
+      function militaryconverter(){
+        if (Number(hours) >12){
+          MM=MM+"PM";
+        }
+        else {
+          MM=MM+"AM";
+        }
+      }
 
       // creating html tags to place values from database
+     
       var html = ` <tr>
-                <td>${snapshot.val().Emname}</td>
-                <td>${snapshot.val().Role}</td>
-                <td>${snapshot.val().StartDate}</td>
-                <td>${monthDiff(new Date(snapshot.val().StartDate), new Date())}</td>
-                <td>${snapshot.val().MonthlyRate+"$"}</td>
-                <td>${snapshot.val().MonthlyRate*12+"$"}</td>
-                    </tr> `
-      $("#sheet").append(html);
-             
-                  
-      
+        <td>${snapshot.val().TrainName}</td>
+        <td>${snapshot.val().Destination}</td>
+        <td>${snapshot.val().Frequency}</td>
+        <td>${HH+":"+MM}</td>
+        <td>${counter}</td>
+            </tr> `
+        $("#sheet").append(html);
       // If any errors are experienced.../  logging errors .
-    }, function(errorObject) {
+      }, function(errorObject) {
       console.log("The read failed: " + errorObject.code);
-    });
+      });
+   
+    
     // this function will be counting months from start day untill today
-    function monthDiff(dateFrom, dateTo) {
-      return dateTo.getMonth() - dateFrom.getMonth() + 
-      (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
-    }
+    
+    
 });
+
+

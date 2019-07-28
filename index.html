@@ -9,52 +9,66 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <!--  -->
-    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+    <script src="assets/javascript/app.js"></script>
   
     <!-- ================================================================================== -->
     <!-- <link rel="stylesheet" href="assets/css/main.css" type="text/css"> -->
 </head>
 <body>
-    <div class="container" style="margin-bottom: 20px;">
-        <div class="jumbotron" style="text-align: center;">
-            <h1 class="display-3">Anytime is Train Time</h1>
+    <div class="container" style="margin-bottom: 10px;">
+        <div class="jumbotron" style="text-align: center; background-color: #ab6546; color: white;" >
+            <h1 class="display-4" >Anytime is Train Time</h1>
             <p class="lead">Choo Choo. Chee Chee</p>
         </div>
-        <table class="table table-hover table-dark">
+            <div class="card" style="font-size: 14px;">
+                <div class="card-header" style="background-color: #447ab2; color: white;">
+                    Current Train Schedule
+                </div>
+        <table>
                 <thead>
-                  <tr>
-                    <th scope="col">Employee Name</th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Start Date</th>
-                    <th scope="col">Months Worked</th>
-                    <th scope="col">Monthly Rate ($)</th>
-                    <th scope="col">Total Billed ($)</th>
+                  <tr style="text-indent: 20px;">
+                        
+                    <th scope="col">Train Name</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Frequency(min)</th>
+                    <th scope="col">Next Arrival</th>
+                    <th scope="col">Minutes Away</th>
                   </tr>
-                </thead>
-                <tbody id = "sheet">     
+                </thead >
+                <tbody id = "sheet" style="text-indent: 20px;">     
                 </tbody>
               </table>
-              <form>
+            </div>
+        </br>
+            <div class="card" style="font-size: 14px;">
+                    <div class="card-header" style="background-color: #447ab2; color: white;">
+                        Add Train
+                    </div>
+              <form style="padding: 10px;">
                     <div class="form-group">
-                      <label for="exampleInputEmail1">Employee Name</label>
-                      <input class="form-control" id="employeeNameInput" aria-describedby="emailHelp" placeholder="Jane Doe">
+                      <label for="TrainNameInput">Train Name</label>
+                      <input class="form-control" id="TrainNameInput" aria-describedby="emailHelp" >
                     </div>
                     <div class="form-group">
-                            <label for="exampleInputEmail1">Role</label>
-                            <input class="form-control" id="Roleinput" placeholder="CEO">
+                            <label for="Destinationinput">Destination</label>
+                            <input class="form-control" id="Destinationinput" >
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword1">Start Date (YYYY/MM/DD)</label>
-                      <input  class="form-control" id="startDateInput" placeholder="yyyy/mm/dd">
+                      <label for="TrainTime">First Train Time (HH:mm-military time)</label>
+                      <input  class="form-control" id="TrainTime" placeholder="hh:mm">
                     </div>
                     <div class="form-group">
-                            <label for="exampleInputPassword1">Monthly Rate</label>
-                            <input  class="form-control" id="monthlyRateInput" placeholder="200000">
+                            <label for="FrequencyInput">frequency</label>
+                            <input  class="form-control" id="FrequencyInput" >
                     </div>
                     <button type="button" class="btn btn-primary" id = "click-button">Submit</button>
                   </form>
+            
+        
+        </div>
     </div>    
   
   
